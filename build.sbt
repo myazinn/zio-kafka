@@ -1,4 +1,5 @@
 import sbt.Def
+import MimaSettings.mimaSettings
 
 lazy val kafkaVersion         = "3.5.1"
 lazy val embeddedKafkaVersion = "3.5.1" // Should be the same as kafkaVersion, except for the patch part
@@ -100,6 +101,7 @@ lazy val zioKafka =
     .enablePlugins(BuildInfoPlugin)
     .settings(stdSettings("zio-kafka"))
     .settings(buildInfoSettings("zio.kafka"))
+    .settings(mimaSettings(failOnProblem = true))
     .settings(enableZIO(enableStreaming = true))
     .settings(
       libraryDependencies ++= Seq(
@@ -123,6 +125,7 @@ lazy val zioKafkaTestkit =
     .dependsOn(zioKafka)
     .enablePlugins(BuildInfoPlugin)
     .settings(stdSettings("zio-kafka-testkit"))
+    .settings(mimaSettings(failOnProblem = false))
     .settings(
       libraryDependencies ++= Seq(
         "dev.zio" %% "zio"      % zioVersion.value,
@@ -185,6 +188,7 @@ lazy val zioKafkaExample =
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
 addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
+addCommandAlias("mimaCheck", "+zioKafka/mimaReportBinaryIssues;+zioKafkaTestkit/mimaReportBinaryIssues")
 
 lazy val docs = project
   .in(file("zio-kafka-docs"))

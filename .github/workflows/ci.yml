@@ -65,6 +65,8 @@ jobs:
       run: sbt ciCheckGithubWorkflow
     - name: Lint
       run: sbt lint
+    - name: MIMA checks
+      run: sbt mimaCheck
   test:
     name: Test
     runs-on: ubuntu-latest
